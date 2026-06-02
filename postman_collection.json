@@ -1,0 +1,233 @@
+{
+  "info": {
+    "name": "Sistema de Cadastro de Eventos e Inscricoes",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080/api"
+    }
+  ],
+  "item": [
+    {
+      "name": "Eventos",
+      "item": [
+        {
+          "name": "Listar eventos",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/eventos",
+              "host": ["{{base_url}}"],
+              "path": ["eventos"]
+            }
+          }
+        },
+        {
+          "name": "Detalhar evento",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/eventos/1",
+              "host": ["{{base_url}}"],
+              "path": ["eventos", "1"]
+            }
+          }
+        },
+        {
+          "name": "Criar evento",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"Oficina de Robotica\",\n  \"descricao\": \"Introducao a robotica educacional.\",\n  \"data\": \"2026-08-10\",\n  \"horario\": \"14:00\",\n  \"local\": \"Laboratorio 2\",\n  \"quantidade_vagas\": 30\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/eventos",
+              "host": ["{{base_url}}"],
+              "path": ["eventos"]
+            }
+          }
+        },
+        {
+          "name": "Atualizar evento",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"encerrado\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/eventos/1",
+              "host": ["{{base_url}}"],
+              "path": ["eventos", "1"]
+            }
+          }
+        },
+        {
+          "name": "Excluir evento",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/eventos/1",
+              "host": ["{{base_url}}"],
+              "path": ["eventos", "1"]
+            }
+          }
+        },
+        {
+          "name": "Eventos com vagas disponiveis",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/eventos/vagas-disponiveis",
+              "host": ["{{base_url}}"],
+              "path": ["eventos", "vagas-disponiveis"]
+            }
+          }
+        },
+        {
+          "name": "Participantes do evento",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/eventos/1/participantes",
+              "host": ["{{base_url}}"],
+              "path": ["eventos", "1", "participantes"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Participantes",
+      "item": [
+        {
+          "name": "Listar participantes",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/participantes",
+              "host": ["{{base_url}}"],
+              "path": ["participantes"]
+            }
+          }
+        },
+        {
+          "name": "Detalhar participante",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/participantes/1",
+              "host": ["{{base_url}}"],
+              "path": ["participantes", "1"]
+            }
+          }
+        },
+        {
+          "name": "Criar participante",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria.silva@email.com\",\n  \"telefone\": \"11999998888\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/participantes",
+              "host": ["{{base_url}}"],
+              "path": ["participantes"]
+            }
+          }
+        },
+        {
+          "name": "Atualizar participante",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"telefone\": \"11988887777\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/participantes/1",
+              "host": ["{{base_url}}"],
+              "path": ["participantes", "1"]
+            }
+          }
+        },
+        {
+          "name": "Excluir participante",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/participantes/1",
+              "host": ["{{base_url}}"],
+              "path": ["participantes", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Inscricoes",
+      "item": [
+        {
+          "name": "Criar inscricao",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"evento_id\": 1,\n  \"participante_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/inscricoes",
+              "host": ["{{base_url}}"],
+              "path": ["inscricoes"]
+            }
+          }
+        },
+        {
+          "name": "Cancelar inscricao",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{base_url}}/inscricoes/1",
+              "host": ["{{base_url}}"],
+              "path": ["inscricoes", "1"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
