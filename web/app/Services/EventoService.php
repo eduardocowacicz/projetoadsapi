@@ -4,15 +4,19 @@ namespace App\Services;
 
 use App\Exceptions\EntidadeNaoEncontradaException;
 use App\Interfaces\EventoRepositoryInterface;
+use App\Interfaces\InscricaoRepositoryInterface;
 use App\Models\Evento;
+use App\Models\Inscricao;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class EventoService
 {
-    public function __construct(private readonly EventoRepositoryInterface $eventos)
-    {
-    }
+    public function __construct(
+        private readonly EventoRepositoryInterface $eventos,
+        private readonly InscricaoRepositoryInterface $inscricoes,
+    ) {}
 
     public function listar(int $perPage): LengthAwarePaginator
     {
@@ -40,15 +44,26 @@ class EventoService
 
     public function atualizar(int $id, array $data): Evento
     {
-        $evento = $this->buscar($id);
+        return DB::transaction(function () use ($id, $data): Evento {
+            $evento = $this->buscar($id);
 
-        if (array_key_exists('quantidade_vagas', $data)) {
-            $usadas = $evento->quantidade_vagas - $evento->vagas_disponiveis;
-            $novaQuantidade = (int) $data['quantidade_vagas'];
-            $data['vagas_disponiveis'] = max(0, $novaQuantidade - $usadas);
-        }
+            if (array_key_exists('quantidade_vagas', $data)) {
+                $usadas = $evento->quantidade_vagas - $evento->vagas_disponiveis;
+                $novaQuantidade = (int) $data['quantidade_vagas'];
+                $data['vagas_disponiveis'] = max(0, $novaQuantidade - $usadas);
+            }
 
-        return $this->eventos->update($evento, $data);
+            $novoStatus = $data['status'] ?? null;
+            $statusFinaliza = in_array($novoStatus, [Evento::STATUS_CANCELADO, Evento::STATUS_ENCERRADO], true);
+            $statusMudou = $novoStatus !== null && $novoStatus !== $evento->status;
+
+            if ($statusFinaliza && $statusMudou) {
+                $this->inscricoes->cancelarAtivas($evento->id);
+                $data['vagas_disponiveis'] = $data['quantidade_vagas'] ?? $evento->quantidade_vagas;
+            }
+
+            return $this->eventos->update($evento, $data);
+        });
     }
 
     public function excluir(int $id): void

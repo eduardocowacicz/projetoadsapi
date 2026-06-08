@@ -17,6 +17,7 @@ class InscricaoRepository implements InscricaoRepositoryInterface
         return Inscricao::query()
             ->where('evento_id', $eventoId)
             ->where('participante_id', $participanteId)
+            ->where('status', Inscricao::STATUS_ATIVA)
             ->first();
     }
 
@@ -31,5 +32,13 @@ class InscricaoRepository implements InscricaoRepositoryInterface
         $inscricao->save();
 
         return $inscricao;
+    }
+
+    public function cancelarAtivas(int $eventoId): void
+    {
+        Inscricao::query()
+            ->where('evento_id', $eventoId)
+            ->where('status', Inscricao::STATUS_ATIVA)
+            ->update(['status' => Inscricao::STATUS_CANCELADA]);
     }
 }

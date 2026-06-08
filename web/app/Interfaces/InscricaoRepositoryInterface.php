@@ -13,4 +13,6 @@ interface InscricaoRepositoryInterface
     public function create(array $data): Inscricao;
 
     public function update(Inscricao $inscricao, array $data): Inscricao;
+
+    public function cancelarAtivas(int $eventoId): void;
 }

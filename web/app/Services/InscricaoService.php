@@ -20,8 +20,7 @@ class InscricaoService
         private readonly EventoRepositoryInterface $eventos,
         private readonly ParticipanteRepositoryInterface $participantes,
         private readonly InscricaoRepositoryInterface $inscricoes,
-    ) {
-    }
+    ) {}
 
     public function criar(array $data): Inscricao
     {
@@ -46,15 +45,15 @@ class InscricaoService
                 throw new EventoEncerradoException();
             }
 
-            if ($evento->vagas_disponiveis <= 0) {
-                throw new EventoSemVagasException();
-            }
-
             $existente = $this->inscricoes
                 ->findByEventoAndParticipante($evento->id, $participante->id);
 
             if ($existente) {
                 throw new InscricaoDuplicadaException();
+            }
+
+            if ($evento->vagas_disponiveis <= 0) {
+                throw new EventoSemVagasException();
             }
 
             $inscricao = $this->inscricoes->create([
