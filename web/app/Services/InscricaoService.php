@@ -12,6 +12,7 @@ use App\Interfaces\InscricaoRepositoryInterface;
 use App\Interfaces\ParticipanteRepositoryInterface;
 use App\Models\Evento;
 use App\Models\Inscricao;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
 class InscricaoService
@@ -21,6 +22,11 @@ class InscricaoService
         private readonly ParticipanteRepositoryInterface $participantes,
         private readonly InscricaoRepositoryInterface $inscricoes,
     ) {}
+
+    public function listar(int $perPage): LengthAwarePaginator
+    {
+        return $this->inscricoes->paginate($perPage);
+    }
 
     public function criar(array $data): Inscricao
     {

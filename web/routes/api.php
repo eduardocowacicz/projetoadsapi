@@ -26,6 +26,7 @@ Route::put('/participantes/{id}', [ParticipanteController::class, 'update'])
 Route::delete('/participantes/{id}', [ParticipanteController::class, 'destroy'])
     ->whereNumber('id');
 
+Route::get('/inscricoes', [InscricaoController::class, 'index']);
 Route::post('/inscricoes', [InscricaoController::class, 'store']);
 Route::delete('/inscricoes/{id}', [InscricaoController::class, 'destroy'])
     ->whereNumber('id');

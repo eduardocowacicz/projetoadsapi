@@ -4,9 +4,17 @@ namespace App\Repositories;
 
 use App\Interfaces\InscricaoRepositoryInterface;
 use App\Models\Inscricao;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class InscricaoRepository implements InscricaoRepositoryInterface
 {
+    public function paginate(int $perPage): LengthAwarePaginator
+    {
+        return Inscricao::with(['evento', 'participante'])
+            ->orderByDesc('data_inscricao')
+            ->paginate($perPage);
+    }
+
     public function findById(int $id): ?Inscricao
     {
         return Inscricao::query()->find($id);
