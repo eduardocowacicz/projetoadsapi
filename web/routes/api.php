@@ -11,11 +11,14 @@ Route::get('/eventos/{id}/participantes', [EventoController::class, 'participant
 Route::get('/eventos', [EventoController::class, 'index']);
 Route::get('/eventos/{id}', [EventoController::class, 'show'])
     ->whereNumber('id');
-Route::post('/eventos', [EventoController::class, 'store']);
-Route::put('/eventos/{id}', [EventoController::class, 'update'])
-    ->whereNumber('id');
-Route::delete('/eventos/{id}', [EventoController::class, 'destroy'])
-    ->whereNumber('id');
+
+Route::middleware(['web', 'auth'])->group(function () {
+    Route::post('/eventos', [EventoController::class, 'store']);
+    Route::put('/eventos/{id}', [EventoController::class, 'update'])
+        ->whereNumber('id');
+    Route::delete('/eventos/{id}', [EventoController::class, 'destroy'])
+        ->whereNumber('id');
+});
 
 Route::get('/participantes', [ParticipanteController::class, 'index']);
 Route::get('/participantes/{id}', [ParticipanteController::class, 'show'])

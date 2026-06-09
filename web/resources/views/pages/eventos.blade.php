@@ -126,6 +126,7 @@
 
 <script>
     const apiBase = '/api';
+    const csrfToken = document.querySelector('#csrf-token')?.content;
     const eventosTableBody = document.querySelector('#eventos-table tbody');
     const eventosMessage = document.getElementById('eventos-message');
     const eventoFormMessage = document.getElementById('evento-form-message');
@@ -155,7 +156,11 @@
         const res = await fetch(url, {
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                ...(csrfToken ? {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                } : {})
             },
             ...options
         });

@@ -79,6 +79,7 @@
 
 <script>
     const apiBase = '/api';
+    const csrfToken = document.querySelector('#csrf-token')?.content;
     const participantesTableBody = document.querySelector('#participantes-table tbody');
     const participantesMessage = document.getElementById('participantes-message');
     const participanteFormMessage = document.getElementById('participante-form-message');
@@ -94,7 +95,11 @@
         const res = await fetch(url, {
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                ...(csrfToken ? {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                } : {})
             },
             ...options
         });

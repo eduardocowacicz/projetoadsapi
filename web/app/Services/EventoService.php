@@ -3,10 +3,10 @@
 namespace App\Services;
 
 use App\Exceptions\EntidadeNaoEncontradaException;
+use App\Exceptions\EventoSemPermissaoException;
 use App\Interfaces\EventoRepositoryInterface;
 use App\Interfaces\InscricaoRepositoryInterface;
 use App\Models\Evento;
-use App\Models\Inscricao;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -34,18 +34,21 @@ class EventoService
         return $evento;
     }
 
-    public function criar(array $data): Evento
+    public function criar(array $data, int $userId): Evento
     {
+        $data['user_id'] = $userId;
         $data['status'] = Evento::STATUS_ABERTO;
         $data['vagas_disponiveis'] = $data['quantidade_vagas'];
 
         return $this->eventos->create($data);
     }
 
-    public function atualizar(int $id, array $data): Evento
+    public function atualizar(int $id, array $data, int $userId): Evento
     {
-        return DB::transaction(function () use ($id, $data): Evento {
+        return DB::transaction(function () use ($id, $data, $userId): Evento {
             $evento = $this->buscar($id);
+
+            $this->validarDono($evento, $userId);
 
             if (array_key_exists('quantidade_vagas', $data)) {
                 $usadas = $evento->quantidade_vagas - $evento->vagas_disponiveis;
@@ -66,9 +69,12 @@ class EventoService
         });
     }
 
-    public function excluir(int $id): void
+    public function excluir(int $id, int $userId): void
     {
         $evento = $this->buscar($id);
+
+        $this->validarDono($evento, $userId);
+
         $this->eventos->delete($evento);
     }
 
@@ -82,5 +88,12 @@ class EventoService
         $evento = $this->buscar($id);
 
         return $this->eventos->getActiveParticipants($evento);
+    }
+
+    private function validarDono(Evento $evento, int $userId): void
+    {
+        if ((int) $evento->user_id !== $userId) {
+            throw new EventoSemPermissaoException();
+        }
     }
 }

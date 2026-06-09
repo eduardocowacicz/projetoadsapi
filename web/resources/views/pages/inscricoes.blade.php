@@ -48,6 +48,7 @@
 
 <script>
     const apiBase = '/api';
+    const csrfToken = document.querySelector('#csrf-token')?.content;
     const inscricoesTableBody = document.querySelector('#inscricoes-table tbody');
     const inscricoesMessage = document.getElementById('inscricoes-message');
     const inscricaoFormMessage = document.getElementById('inscricao-form-message');
@@ -69,7 +70,11 @@
         const res = await fetch(url, {
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Accept': 'application/json',
+                ...(csrfToken ? {
+                    'X-CSRF-TOKEN': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                } : {})
             },
             ...options
         });

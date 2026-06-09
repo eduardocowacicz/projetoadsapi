@@ -11,9 +11,7 @@ use Illuminate\Http\Request;
 
 class EventoController extends Controller
 {
-    public function __construct(private readonly EventoService $eventos)
-    {
-    }
+    public function __construct(private readonly EventoService $eventos) {}
 
     public function index(Request $request)
     {
@@ -29,7 +27,7 @@ class EventoController extends Controller
 
     public function store(StoreEventoRequest $request)
     {
-        $evento = $this->eventos->criar($request->validated());
+        $evento = $this->eventos->criar($request->validated(), (int) $request->user()->id);
 
         return (new EventoResource($evento))
             ->response()
@@ -38,14 +36,14 @@ class EventoController extends Controller
 
     public function update(UpdateEventoRequest $request, int $id): EventoResource
     {
-        $evento = $this->eventos->atualizar($id, $request->validated());
+        $evento = $this->eventos->atualizar($id, $request->validated(), (int) $request->user()->id);
 
         return new EventoResource($evento);
     }
 
-    public function destroy(int $id)
+    public function destroy(Request $request, int $id)
     {
-        $this->eventos->excluir($id);
+        $this->eventos->excluir($id, (int) $request->user()->id);
 
         return response()->json(null, 204);
     }

@@ -2,9 +2,23 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Model;
+
+/**
+ * @property int $id
+ * @property int|null $user_id
+ * @property string $titulo
+ * @property string|null $descricao
+ * @property string $data
+ * @property string $horario
+ * @property string $local
+ * @property int $quantidade_vagas
+ * @property int $vagas_disponiveis
+ * @property string $status
+ */
 
 class Evento extends Model
 {
@@ -15,6 +29,7 @@ class Evento extends Model
     protected $table = 'eventos';
 
     protected $fillable = [
+        'user_id',
         'titulo',
         'descricao',
         'data',
@@ -32,6 +47,11 @@ class Evento extends Model
     public function inscricoes(): HasMany
     {
         return $this->hasMany(Inscricao::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function participantes(): BelongsToMany
