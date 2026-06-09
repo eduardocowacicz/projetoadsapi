@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<h1>Participantes</h1>
+<h1>Cadastro de participantes</h1>
 
 <div id="participante-modal" class="modal-backdrop" style="display:none">
     <div class="modal-card">
@@ -52,14 +52,14 @@
         </form>
     </div>
     <div class="card">
-        <h2>Acoes rapidas</h2>
-        <p>Cadastre participantes pelo formulario ao lado. Clique em <strong>Editar</strong> na tabela para atualizar os dados de um participante.</p>
+        <h2>Como funciona</h2>
+        <p>Cadastre aqui as pessoas que poderao ser inscritas nos eventos. A inscricao em si e feita depois, na tela de <strong>Inscricoes</strong>.</p>
     </div>
 </div>
 
 <div class="card">
     <div class="card-header">
-        <h2>Lista de participantes</h2>
+        <h2>Participantes cadastrados</h2>
         <button id="participantes-refresh" class="secondary" type="button">Atualizar</button>
     </div>
     <div id="participantes-message" class="message"></div>

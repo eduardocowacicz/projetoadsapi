@@ -11,7 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
+        Schema::table('inscricoes', function (Blueprint $table) {
+            $table->dropUnique(['evento_id', 'participante_id']);
+        });
     }
 
     /**
@@ -19,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::table('inscricoes', function (Blueprint $table) {
+            $table->unique(['evento_id', 'participante_id']);
+        });
     }
 };

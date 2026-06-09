@@ -16,7 +16,7 @@
             <nav class="nav">
                 <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
                 <a href="{{ route('eventos.page') }}" class="{{ request()->routeIs('eventos.page') ? 'active' : '' }}">Eventos</a>
-                <a href="{{ route('participantes.page') }}" class="{{ request()->routeIs('participantes.page') ? 'active' : '' }}">Participantes</a>
+                <a href="{{ route('participantes.page') }}" class="{{ request()->routeIs('participantes.page') ? 'active' : '' }}">Pessoas</a>
                 <a href="{{ route('inscricoes.page') }}" class="{{ request()->routeIs('inscricoes.page') ? 'active' : '' }}">Inscricoes</a>
             </nav>
             <form method="POST" action="{{ route('logout') }}">

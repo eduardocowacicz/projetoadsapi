@@ -88,11 +88,13 @@
         </form>
     </div>
     <div class="card">
-        <h2>Participantes do evento</h2>
+        <h2>Inscritos em um evento</h2>
         <form id="participantes-evento-form">
             <div class="form-group">
-                <label for="evento_id_busca">ID do evento</label>
-                <input id="evento_id_busca" type="number" min="1" required>
+                <label for="evento_id_busca">Evento</label>
+                <select id="evento_id_busca" required>
+                    <option value="">Selecione um evento</option>
+                </select>
             </div>
             <button type="submit">Buscar</button>
             <div id="participantes-evento-message" class="message"></div>
@@ -132,6 +134,7 @@
     const eventoFormMessage = document.getElementById('evento-form-message');
     const participantesMessage = document.getElementById('participantes-evento-message');
     const participantesList = document.getElementById('participantes-evento-list');
+    const eventoBuscaSelect = document.getElementById('evento_id_busca');
     const eventoModal = document.getElementById('evento-modal');
     const eventoEditMessage = document.getElementById('evento-edit-message');
 
@@ -170,11 +173,26 @@
         return data;
     };
 
+    const updateEventoBuscaOptions = (eventos) => {
+        const options = ['<option value="">Selecione um evento</option>'];
+
+        for (const evento of eventos) {
+            options.push(`<option value="${evento.id}">${evento.titulo} - ${evento.data || 'sem data'}</option>`);
+        }
+
+        eventoBuscaSelect.innerHTML = options.join('');
+        eventoBuscaSelect.disabled = eventos.length === 0;
+    };
+
     const loadEventos = async () => {
         try {
             setMessage(eventosMessage, '');
             const data = await request(`${apiBase}/eventos?per_page=100`);
-            eventosTableBody.innerHTML = (data?.data || []).map(e => `
+            const items = data?.data || [];
+
+            updateEventoBuscaOptions(items);
+
+            eventosTableBody.innerHTML = items.map(e => `
                     <tr>
                         <td>${e.id}</td>
                         <td>${e.titulo}</td>
@@ -280,7 +298,14 @@
 
     document.getElementById('participantes-evento-form').addEventListener('submit', async (event) => {
         event.preventDefault();
-        const eventoId = document.getElementById('evento_id_busca').value;
+        const eventoId = eventoBuscaSelect.value;
+
+        if (!eventoId) {
+            setMessage(participantesMessage, 'Selecione um evento para ver os inscritos.', 'error');
+            participantesList.innerHTML = '';
+            return;
+        }
+
         try {
             const data = await request(`${apiBase}/eventos/${eventoId}/participantes`);
             const items = data?.data || [];
